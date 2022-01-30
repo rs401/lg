@@ -9,11 +9,10 @@ import (
 	"github.com/rs401/lg/auth/repository"
 	"github.com/rs401/lg/validation"
 	"golang.org/x/crypto/bcrypt"
-	"gorm.io/gorm"
 )
 
 type AuthSvc interface {
-	SignUp(*models.User, *models.User) error
+	SignUp(*models.SignUpRequest, *models.User) error
 	SignIn(*models.SignInRequest, *models.User) error
 	GetUser(*models.GetUserRequest, *models.User) error
 	ListUsers(context.Context, *models.UserList) error
@@ -29,13 +28,20 @@ func NewAuthService(usersRepository repository.UsersRepository) AuthSvc {
 	return &AuthService{usersRepository: usersRepository}
 }
 
-func (as *AuthService) SignUp(req *models.User, res *models.User) error {
+func (as *AuthService) SignUp(req *models.SignUpRequest, res *models.User) error {
 	err := validation.IsValidSignUp(req)
 	if err != nil {
 		return err
 	}
 	exists, err := as.usersRepository.GetByEmail(req.Email)
-	if err == gorm.ErrRecordNotFound {
+	if err != nil {
+		return err
+	}
+	if exists.Name != "" {
+		return validation.ErrEmailExists
+	}
+
+	if exists.Name == "" {
 		// user := new(models.User)
 		res.Name = strings.TrimSpace(req.Name)
 		res.Email = validation.NormalizeEmail(req.Email)
@@ -47,22 +53,20 @@ func (as *AuthService) SignUp(req *models.User, res *models.User) error {
 
 		err = as.usersRepository.Save(res)
 		if err != nil {
+			if strings.Contains(err.Error(), "duplicate") {
+				if strings.Contains(err.Error(), "name") {
+					return validation.ErrNameExists
+				}
+				if strings.Contains(err.Error(), "email") {
+					return validation.ErrEmailExists
+				}
+			}
 			return err
 		}
+		// res = &user
 		return nil
 	}
 
-	if err == gorm.ErrInvalidField {
-		if strings.Contains(err.Error(), "name") {
-			return validation.ErrNameExists
-		}
-		if strings.Contains(err.Error(), "email") {
-			return validation.ErrEmailExists
-		}
-	}
-	if exists == nil {
-		return err
-	}
 	return err
 
 }

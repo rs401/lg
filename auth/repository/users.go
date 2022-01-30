@@ -12,9 +12,9 @@ var ErrorBadID error = errors.New("bad id")
 
 type UsersRepository interface {
 	Save(user *models.User) error
-	GetById(id uint) (user *models.User, err error)
-	GetByEmail(email string) (user *models.User, err error)
-	GetAll() (users []*models.User, err error)
+	GetById(id uint) (*models.User, error)
+	GetByEmail(email string) (*models.User, error)
+	GetAll() ([]*models.User, error)
 	Update(user *models.User) error
 	Delete(id uint) error
 }
@@ -31,19 +31,22 @@ func (r *usersRepository) Save(user *models.User) error {
 	return r.db.Create(&user).Error
 }
 
-func (r *usersRepository) GetById(id uint) (user *models.User, err error) {
+func (r *usersRepository) GetById(id uint) (*models.User, error) {
+	var user models.User
 	result := r.db.Where("ID = ?", id).First(&user)
-	return user, result.Error
+	return &user, result.Error
 }
 
-func (r *usersRepository) GetByEmail(email string) (user *models.User, err error) {
+func (r *usersRepository) GetByEmail(email string) (*models.User, error) {
+	var user models.User
 	result := r.db.Where("email = ?", email).Find(&user)
-	return user, result.Error
+	return &user, result.Error
 }
 
-func (r *usersRepository) GetAll() (users []*models.User, err error) {
-	result := r.db.Find(&users)
-	return users, result.Error
+func (r *usersRepository) GetAll() ([]*models.User, error) {
+	var ul models.UserList
+	result := r.db.Find(&ul.Users)
+	return ul.Users, result.Error
 }
 
 func (r *usersRepository) Update(user *models.User) error {

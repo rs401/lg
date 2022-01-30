@@ -24,7 +24,7 @@ var (
 	MinPwLen int = 8
 )
 
-func IsValidSignUp(user *models.User) error {
+func IsValidSignUp(user *models.SignUpRequest) error {
 	if IsEmptyString(user.Name) {
 		return ErrEmptyName
 	}
