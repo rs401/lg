@@ -1,7 +1,7 @@
 package models
 
 type GetUserRequest struct {
-	Id uint
+	Id uint `json:"id"`
 }
 
 type SignInRequest struct {
@@ -17,4 +17,8 @@ type SignUpRequest struct {
 	Name     string `json:"name"`
 	Email    string `json:"email"`
 	Password string `json:"password"`
+}
+
+type GetUsersResponse struct {
+	Users []*User
 }

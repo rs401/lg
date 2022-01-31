@@ -44,7 +44,7 @@ func (r *usersRepository) GetByEmail(email string) (*models.User, error) {
 }
 
 func (r *usersRepository) GetAll() ([]*models.User, error) {
-	var ul models.UserList
+	var ul models.GetUsersResponse
 	result := r.db.Find(&ul.Users)
 	return ul.Users, result.Error
 }

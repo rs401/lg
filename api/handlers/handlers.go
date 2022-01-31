@@ -4,8 +4,10 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+	"strconv"
 	"time"
 
+	"github.com/gorilla/mux"
 	"github.com/rs401/lg/api/authclient"
 	"github.com/rs401/lg/api/tokenutils"
 	"github.com/rs401/lg/auth/models"
@@ -113,11 +115,39 @@ func (ah *authHandlers) UpdateUser(w http.ResponseWriter, r *http.Request) {
 }
 
 func (ah *authHandlers) GetUser(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	var req models.GetUserRequest
+	var user models.User
+	id, err := strconv.Atoi(vars["id"])
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		json.NewEncoder(w).Encode(map[string]string{"error": "bad path"})
+		return
+	}
+	req.Id = uint(id)
+	err = ah.authSvcClient.GetUser(&req, &user)
+	if err != nil {
+		log.Printf("Error calling GetUser: %v\n", err)
+		w.WriteHeader(http.StatusInternalServerError)
+		json.NewEncoder(w).Encode(map[string]string{"error": err.Error()})
+		return
+	}
 
+	w.WriteHeader(http.StatusFound)
+	json.NewEncoder(w).Encode(user)
 }
 
 func (ah *authHandlers) GetUsers(w http.ResponseWriter, r *http.Request) {
-
+	var users models.GetUsersResponse
+	err := ah.authSvcClient.ListUsers("trash", &users)
+	if err != nil {
+		log.Printf("Error calling ListUsers: %v\n", err)
+		w.WriteHeader(http.StatusInternalServerError)
+		json.NewEncoder(w).Encode(map[string]string{"error": err.Error()})
+		return
+	}
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(users.Users)
 }
 
 func (ah *authHandlers) DeleteUser(w http.ResponseWriter, r *http.Request) {

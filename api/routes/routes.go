@@ -17,7 +17,7 @@ func SetupRoutes(r *mux.Router, hndlrs handlers.AuthHandlers) {
 	r.HandleFunc("/api/signup/", hndlrs.SignUp).Methods("POST")
 	r.HandleFunc("/api/signin/", hndlrs.SignIn).Methods("POST")
 	r.HandleFunc("/api/user/", hndlrs.GetUsers).Methods("GET")
-	r.HandleFunc("/api/user/{id:[0-9]+}/", hndlrs.GetUsers).Methods("GET")
+	r.HandleFunc("/api/user/{id:[0-9]+}/", hndlrs.GetUser).Methods("GET")
 	r.HandleFunc("/api/user/{id:[0-9]+}/", hndlrs.UpdateUser).Methods("PUT")
 	r.HandleFunc("/api/user/{id:[0-9]+}/", hndlrs.DeleteUser).Methods("DELETE")
 }

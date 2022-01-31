@@ -1,7 +1,6 @@
 package service
 
 import (
-	"context"
 	"strings"
 	"time"
 
@@ -15,7 +14,7 @@ type AuthSvc interface {
 	SignUp(*models.SignUpRequest, *models.User) error
 	SignIn(*models.SignInRequest, *models.User) error
 	GetUser(*models.GetUserRequest, *models.User) error
-	ListUsers(context.Context, *models.UserList) error
+	ListUsers(string, *models.GetUsersResponse) error
 	UpdateUser(*models.User, *models.User) error
 	DeleteUser(*models.GetUserRequest, *models.GetUserRequest) error
 }
@@ -98,7 +97,7 @@ func (as *AuthService) GetUser(req *models.GetUserRequest, res *models.User) err
 	return nil
 }
 
-func (as *AuthService) ListUsers(ctx context.Context, res *models.UserList) error {
+func (as *AuthService) ListUsers(trash string, res *models.GetUsersResponse) error {
 	users, err := as.usersRepository.GetAll()
 	if err != nil {
 		return err

@@ -16,7 +16,3 @@ type User struct {
 	UpdatedAt time.Time      `json:"updatedAt"`
 	DeletedAt gorm.DeletedAt `gorm:"index"`
 }
-
-type UserList struct {
-	Users []*User
-}

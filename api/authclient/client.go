@@ -1,7 +1,6 @@
 package authclient
 
 import (
-	"context"
 	"net/rpc"
 
 	"github.com/rs401/lg/auth/models"
@@ -11,7 +10,7 @@ type AuthSvcClient interface {
 	SignUp(req *models.SignUpRequest, res *models.User) error
 	SignIn(req *models.SignInRequest, res *models.User) error
 	GetUser(req *models.GetUserRequest, res *models.User) error
-	ListUsers(req context.Context, res *models.UserList) error
+	ListUsers(req string, res *models.GetUsersResponse) error
 	UpdateUser(req *models.User, res *models.User) error
 	DeleteUser(req *models.GetUserRequest, res *models.GetUserRequest) error
 }
@@ -36,7 +35,7 @@ func (asc *authServiceClient) GetUser(req *models.GetUserRequest, res *models.Us
 	return asc.client.Call("AuthService.GetUser", req, res)
 }
 
-func (asc *authServiceClient) ListUsers(req context.Context, res *models.UserList) error {
+func (asc *authServiceClient) ListUsers(req string, res *models.GetUsersResponse) error {
 	return asc.client.Call("AuthService.ListUsers", req, res)
 }
 
