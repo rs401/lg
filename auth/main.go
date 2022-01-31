@@ -10,7 +10,6 @@ import (
 	"strconv"
 
 	"github.com/joho/godotenv"
-	"github.com/rs401/lg/auth/models"
 	"github.com/rs401/lg/auth/repository"
 	"github.com/rs401/lg/auth/service"
 	"github.com/rs401/lg/db"
@@ -30,8 +29,7 @@ func main() {
 	if err != nil {
 		log.Fatalf("Error connecting to database: %v", err)
 	}
-	// Had to do it somewhere
-	conn.DB().AutoMigrate(&models.User{})
+
 	// Get a usersRepository
 	usersRepository := repository.NewUsersRepository(conn)
 	// Get an authService
