@@ -12,6 +12,7 @@ import (
 	"github.com/joho/godotenv"
 	"github.com/rs401/lg/api/authclient"
 	"github.com/rs401/lg/api/handlers"
+	"github.com/rs401/lg/api/middlewares"
 	"github.com/rs401/lg/api/routes"
 )
 
@@ -51,6 +52,8 @@ func main() {
 	router := mux.NewRouter()
 	// Setup routes
 	routes.SetupRoutes(router, hndlrs)
+	// Setup middlewares
+	middlewares.SetupMiddleWares(router)
 	// Listen
 	log.Printf("Listening on port :%d\n", APIPort)
 	err = http.ListenAndServe(fmt.Sprintf(":%d", APIPort), router)
