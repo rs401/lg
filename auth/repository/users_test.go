@@ -15,7 +15,7 @@ import (
 func init() {
 	err := godotenv.Load("../.env.dev")
 	if err != nil {
-		log.Fatalf("Error loading environment variables: %v", err)
+		log.Printf("Error loading environment variables (probably GH Actions): %v", err)
 	}
 	// Delete all previous test's users
 	cfg := db.NewConfig()

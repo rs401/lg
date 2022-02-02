@@ -17,7 +17,7 @@ import (
 func init() {
 	err := godotenv.Load("../.env")
 	if err != nil {
-		log.Fatalf("Error loading environment variables: %v\n", err)
+		log.Printf("Error loading environment variables (probably GH Actions): %v\n", err)
 	}
 }
 
