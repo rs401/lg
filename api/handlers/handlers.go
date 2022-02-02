@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
 	"strconv"
@@ -96,7 +97,7 @@ func (ah *authHandlers) SignIn(w http.ResponseWriter, r *http.Request) {
 	}
 	if tokens != nil {
 		// Set access token in auth header
-		w.Header().Set("Authorization", tokens.AccessToken)
+		w.Header().Set("Authorization", fmt.Sprintf("Bearer %v", tokens.AccessToken))
 		// Set refresh token in cookie
 		http.SetCookie(w,
 			&http.Cookie{
