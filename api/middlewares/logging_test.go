@@ -33,7 +33,6 @@ func TestLogMiddleware(t *testing.T) {
 		for scanner.Scan() {
 			buf.WriteString(scanner.Text())
 		}
-		log.Printf("Scanner error: %v\n", scanner.Err())
 	}()
 
 	// Create test HTTP server

@@ -19,4 +19,7 @@ jobs:
         go-version: 1.17
 
     - name: Test
+      env:
+        JWT_SECRET: ${{ secrets.JWT_SECRET }}
+        REFRESH_SECRET: ${{ secrets.REFRESH_SECRET }}
       run: go test -v ./api/...
