@@ -3,4 +3,5 @@ bin
 .env.dev
 *.BAK
 authsvc
+authapi
 notes.md
