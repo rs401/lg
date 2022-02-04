@@ -3,7 +3,7 @@ FROM scratch
 # Need to add ENV variables with sane defaults or no default
 
 COPY ./authsvc ./
-COPY ./.env ./
+# COPY ./.env ./
 
 EXPOSE ${AUTHSVC_PORT}
 

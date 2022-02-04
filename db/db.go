@@ -8,6 +8,12 @@ import (
 	"gorm.io/gorm"
 )
 
+type ConnectionError struct{}
+
+func (ce *ConnectionError) Error() string {
+	return "error connecting to database"
+}
+
 type Connection interface {
 	DB() *gorm.DB
 }
@@ -24,7 +30,7 @@ func NewConnection(cfg Config) (Connection, error) {
 	dbc, err := gorm.Open(postgres.Open(cfg.ConnStr()), &gorm.Config{})
 	if err != nil {
 		log.Printf("Error, could not connect to database: %v", err)
-		return nil, err
+		return nil, &ConnectionError{}
 	}
 	// I guess do this here
 	dbc.AutoMigrate(&models.User{})

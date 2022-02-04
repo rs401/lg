@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: lg-authapi
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: lg-authapi
+  template:
+    metadata:
+      labels:
+        app: lg-authapi
+    spec:
+      containers:
+      - name: lg-authapi
+        image: rs401/lgauthapi:latest
+        imagePullPolicy: IfNotPresent
+        resources:
+          limits:
+            memory: 512Mi
+            cpu: "1"
+          requests:
+            memory: 256Mi
+            cpu: "0.2"
+        ports:
+          - containerPort: 9000
+        env:
+          - name: API_PORT
+            valueFrom:
+              configMapKeyRef:
+                name: lg-authapi-config
+                key: api_port
+          - name: AUTHSVC_HOST
+            valueFrom:
+              configMapKeyRef:
+                name: lg-authapi-config
+                key: authsvc_host
+          - name: AUTHSVC_PORT
+            valueFrom:
+              configMapKeyRef:
+                name: lg-authapi-config
+                key: authsvc_port
+          - name: JWT_SECRET
+            valueFrom:
+              secretKeyRef:
+                name: lg-authapi-secrets
+                key: jwt_secret
+          - name: REFRESH_SECRET
+            valueFrom:
+              secretKeyRef:
+                name: lg-authapi-secrets
+                key: refresh_secret

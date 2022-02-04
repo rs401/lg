@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: lg-authsvc-config
+data:
+  authsvc_port: "9001"
+  db_user: "postgres"
+  db_name: "postgres"
+  db_host: "lg-postgres"
+  db_port: "5432"

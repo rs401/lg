@@ -20,3 +20,6 @@ build-auth-docker: ## build the Auth service docker image
 
 test: ## Run all tests
 	@go test -v -cover ./...
+
+kube: ## Run kubectl apply on kubernetes config directory
+	@kubectl apply -f k8s/

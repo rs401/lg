@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: lg-authapi-config
+data:
+  api_port: "9000"
+  authsvc_host: "lg-authsvc"
+  authsvc_port: "9001"

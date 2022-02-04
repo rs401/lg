@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: lg-postgres
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: lg-postgres
+  template:
+    metadata:
+      labels:
+        app: lg-postgres
+    spec:
+      containers:
+      - name: lg-postgres
+        image: postgres:alpine
+        imagePullPolicy: IfNotPresent
+        ports:
+          - containerPort: 5432
+        env:
+          - name: POSTGRES_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: pg-secrets
+                key: db_pass
