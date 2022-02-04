@@ -25,7 +25,7 @@ var (
 func init() {
 	err := godotenv.Load()
 	if err != nil {
-		log.Fatalf("Error loading environment variables: %v\n", err)
+		log.Printf("Error loading .env file (production?): %v\n", err)
 	}
 	AuthSvcHost = os.Getenv("AUTHSVC_HOST")
 	AuthSvcPort, err = strconv.Atoi(os.Getenv("AUTHSVC_PORT"))
