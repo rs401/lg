@@ -8,6 +8,7 @@ import (
 	"net/rpc"
 	"os"
 	"strconv"
+	"time"
 
 	"github.com/joho/godotenv"
 	"github.com/rs401/lg/auth/repository"
@@ -15,19 +16,37 @@ import (
 	"github.com/rs401/lg/db"
 )
 
+var (
+	dbRetries       uint
+	dbMaxRetries    uint
+	dbRetryDuration time.Duration
+)
+
 func init() {
 	err := godotenv.Load()
 	if err != nil {
 		log.Printf("Error loading .env file (production?): %v\n", err)
 	}
+	dbRetries = 0
+	dbMaxRetries = 10
+	dbRetryDuration = time.Second * 3
 }
 
 func main() {
 	// Get our config and a new connection
 	cfg := db.NewConfig()
 	conn, err := db.NewConnection(cfg)
-	if err != nil {
-		log.Fatalf("Error connecting to database: %v", err)
+	for err != nil && dbRetries <= dbMaxRetries {
+		_, ok := err.(*db.ConnectionError)
+		if ok {
+			// connection error, db might not be up
+			log.Printf("Error connecting to db, retrying in %f seconds...\n", dbRetryDuration.Seconds())
+			time.Sleep(dbRetryDuration)
+			dbRetries++
+			conn, err = db.NewConnection(cfg)
+		} else {
+			log.Fatalf("Error connecting to database: %v", err)
+		}
 	}
 
 	// Get a usersRepository
