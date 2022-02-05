@@ -56,21 +56,4 @@ func TestLogMiddleware(t *testing.T) {
 		t.Error("Expected only a single line of log output")
 	}
 
-	// type args struct {
-	// 	next http.Handler
-	// }
-	// tests := []struct {
-	// 	name string
-	// 	args args
-	// 	want http.Handler
-	// }{
-	// 	// TODO: Add test cases.
-	// }
-	// for _, tt := range tests {
-	// 	t.Run(tt.name, func(t *testing.T) {
-	// 		if got := LogMiddleware(tt.args.next); !reflect.DeepEqual(got, tt.want) {
-	// 			t.Errorf("LogMiddleware() = %v, want %v", got, tt.want)
-	// 		}
-	// 	})
-	// }
 }
