@@ -5,6 +5,7 @@ import (
 
 	"github.com/rs401/lg/auth/models"
 	"github.com/rs401/lg/db"
+	"github.com/rs401/lg/validation"
 	"gorm.io/gorm"
 )
 
@@ -50,7 +51,15 @@ func (r *usersRepository) GetAll() ([]*models.User, error) {
 }
 
 func (r *usersRepository) Update(user *models.User) error {
-	return r.db.Save(user).Error
+	var tmpUser = new(models.User)
+	r.db.Find(&tmpUser, user.ID)
+	if tmpUser.Name != user.Name && !validation.IsEmptyString(user.Name) {
+		tmpUser.Name = user.Name
+	}
+	if tmpUser.Email != user.Email && validation.IsValidEmail(user.Email) {
+		tmpUser.Email = user.Email
+	}
+	return r.db.Save(&tmpUser).Error
 }
 
 func (r *usersRepository) Delete(id uint) error {

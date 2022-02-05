@@ -1,3 +1,4 @@
+// Package handlers provides handlerfuncs
 package handlers
 
 import (
@@ -14,6 +15,7 @@ import (
 	"github.com/rs401/lg/auth/models"
 )
 
+// AuthHandlers interface defining HandlerFuncs
 type AuthHandlers interface {
 	SignUp(w http.ResponseWriter, r *http.Request)
 	SignIn(w http.ResponseWriter, r *http.Request)
@@ -27,7 +29,7 @@ type authHandlers struct {
 	authSvcClient authclient.AuthSvcClient
 }
 
-// NewAuthHandlers Creates new auth handlers
+// NewAuthHandlers takes an authclient.AuthSvcClient and returns an AuthHandlers
 func NewAuthHandlers(authSvcClient authclient.AuthSvcClient) AuthHandlers {
 	return &authHandlers{authSvcClient: authSvcClient}
 }
@@ -112,7 +114,35 @@ func (ah *authHandlers) SignIn(w http.ResponseWriter, r *http.Request) {
 }
 
 func (ah *authHandlers) UpdateUser(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	var user = new(models.User)
+	var result = new(models.User)
+	id, err := strconv.Atoi(vars["id"])
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		json.NewEncoder(w).Encode(map[string]string{"error": "bad path"})
+		return
+	}
+	err = json.NewDecoder(r.Body).Decode(&user)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		json.NewEncoder(w).Encode(map[string]string{"error": "json formating decode error"})
+		return
+	}
+	if user.ID != uint(id) {
+		w.WriteHeader(http.StatusBadRequest)
+		json.NewEncoder(w).Encode(map[string]string{"error": "bad request, id error"})
+		return
+	}
+	err = ah.authSvcClient.UpdateUser(user, result)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		json.NewEncoder(w).Encode(map[string]string{"error": err.Error()})
+		return
+	}
 
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(result)
 }
 
 func (ah *authHandlers) GetUser(w http.ResponseWriter, r *http.Request) {

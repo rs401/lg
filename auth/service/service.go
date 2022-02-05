@@ -2,7 +2,6 @@ package service
 
 import (
 	"strings"
-	"time"
 
 	"github.com/rs401/lg/auth/models"
 	"github.com/rs401/lg/auth/repository"
@@ -134,11 +133,7 @@ func (as *AuthService) UpdateUser(req *models.User, res *models.User) error {
 	}
 
 	// Update the user record
-	res.Name = req.Name
-	res.Email = req.Email
-	res.UpdatedAt = time.Now()
-
-	err = as.usersRepository.Update(res)
+	err = as.usersRepository.Update(req)
 	if err != nil {
 		return err
 	}
