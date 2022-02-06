@@ -12,13 +12,21 @@ import (
 )
 
 var (
-	ErrEmptyName       = errors.New("name cannot be empty")
-	ErrEmptyEmail      = errors.New("email cannot be empty")
-	ErrEmptyPassword   = errors.New("password cannot be empty")
-	ErrInvalidEmail    = errors.New("email not valid")
-	ErrEmailExists     = errors.New("email already exists")
-	ErrNameExists      = errors.New("name already exists")
-	ErrNotFound        = errors.New("user not found")
+	// ErrEmptyName
+	ErrEmptyName = errors.New("name cannot be empty")
+	// ErrEmptyEmail
+	ErrEmptyEmail = errors.New("email cannot be empty")
+	// ErrEmptyPassword
+	ErrEmptyPassword = errors.New("password cannot be empty")
+	// ErrInvalidEmail
+	ErrInvalidEmail = errors.New("email not valid")
+	// ErrEmailExists
+	ErrEmailExists = errors.New("email already exists")
+	// ErrNameExists
+	ErrNameExists = errors.New("name already exists")
+	// ErrNotFound
+	ErrNotFound = errors.New("user not found")
+	// ErrInvalidPassword
 	ErrInvalidPassword error
 
 	MaxPwLen int = 50
