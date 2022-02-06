@@ -182,5 +182,22 @@ func (ah *authHandlers) GetUsers(w http.ResponseWriter, r *http.Request) {
 }
 
 func (ah *authHandlers) DeleteUser(w http.ResponseWriter, r *http.Request) {
-
+	vars := mux.Vars(r)
+	var req, res models.GetUserRequest
+	id, err := strconv.Atoi(vars["id"])
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		json.NewEncoder(w).Encode(map[string]string{"error": "bad path"})
+		return
+	}
+	req.Id = uint(id)
+	err = ah.authSvcClient.DeleteUser(&req, &res)
+	if err != nil {
+		log.Printf("Error calling DeleteUser: %v\n", err)
+		w.WriteHeader(http.StatusInternalServerError)
+		json.NewEncoder(w).Encode(map[string]string{"error": err.Error()})
+		return
+	}
+	w.WriteHeader(http.StatusAccepted)
+	json.NewEncoder(w).Encode(map[string]string{"delete": "success"})
 }

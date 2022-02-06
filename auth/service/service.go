@@ -137,6 +137,7 @@ func (as *AuthService) UpdateUser(req *models.User, res *models.User) error {
 	if err != nil {
 		return err
 	}
+	*res = *req
 	return nil
 
 }
