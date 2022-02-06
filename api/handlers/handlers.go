@@ -34,6 +34,7 @@ func NewAuthHandlers(authSvcClient authclient.AuthSvcClient) AuthHandlers {
 	return &authHandlers{authSvcClient: authSvcClient}
 }
 
+// SignUp handles calling the Client.SignUp method
 func (ah *authHandlers) SignUp(w http.ResponseWriter, r *http.Request) {
 	var user models.SignUpRequest
 	var result models.User
@@ -72,6 +73,7 @@ func (ah *authHandlers) SignUp(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(result)
 }
 
+// SignIn handles calling the Client.SignIn method
 func (ah *authHandlers) SignIn(w http.ResponseWriter, r *http.Request) {
 	var signReq models.SignInRequest
 	var user models.User
@@ -113,6 +115,7 @@ func (ah *authHandlers) SignIn(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(user)
 }
 
+// UpdateUser handles calling the Client.UpdateUser method
 func (ah *authHandlers) UpdateUser(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	var user = new(models.User)
@@ -145,6 +148,7 @@ func (ah *authHandlers) UpdateUser(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(result)
 }
 
+// GetUser handles calling the Client.GetUser method
 func (ah *authHandlers) GetUser(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	var req models.GetUserRequest
@@ -168,6 +172,7 @@ func (ah *authHandlers) GetUser(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(user)
 }
 
+// GetUsers handles calling the Client.ListUsers method
 func (ah *authHandlers) GetUsers(w http.ResponseWriter, r *http.Request) {
 	var users models.GetUsersResponse
 	err := ah.authSvcClient.ListUsers("trash", &users)
@@ -181,6 +186,7 @@ func (ah *authHandlers) GetUsers(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(users.Users)
 }
 
+// DeleteUser handles calling the Client.DeleteUser method
 func (ah *authHandlers) DeleteUser(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	var req, res models.GetUserRequest

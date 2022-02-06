@@ -1,3 +1,4 @@
+// Package tokenutils provides utilities for JWTs
 package tokenutils
 
 import (
@@ -12,17 +13,19 @@ import (
 	"github.com/google/uuid"
 )
 
+// Tokens holds an access token and a refresh token
 type Tokens struct {
 	AccessToken  string
 	RefreshToken string
 }
 
+// Claims holds a UserId and standard claims
 type Claims struct {
 	UserId uint `json:"userid"` // User ID
 	jwt.StandardClaims
 }
 
-// Take ID and generate access token
+// CreateToken takes an ID and generates a Tokens
 func CreateToken(userid uint) (*Tokens, error) {
 	ts := &Tokens{}
 
@@ -52,6 +55,7 @@ func CreateToken(userid uint) (*Tokens, error) {
 	return ts, nil
 }
 
+// ExtractToken extracts an access token from request header
 func ExtractToken(r *http.Request) string {
 	bearToken := r.Header.Get("Authorization")
 	strArr := strings.Split(bearToken, " ")
@@ -61,6 +65,7 @@ func ExtractToken(r *http.Request) string {
 	return ""
 }
 
+// VerifyToken verifies a token is legit
 func VerifyToken(r *http.Request) (*jwt.Token, error) {
 	tokenString := ExtractToken(r)
 	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
@@ -75,6 +80,7 @@ func VerifyToken(r *http.Request) (*jwt.Token, error) {
 	return token, nil
 }
 
+// VerifyRefreshToken verifies a refresh token is legit
 func VerifyRefreshToken(r *http.Request) (*jwt.Token, error) {
 	tokenString := ExtractToken(r)
 	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {

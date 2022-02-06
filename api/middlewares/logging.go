@@ -1,3 +1,4 @@
+// Package middlewares provides middlewares
 package middlewares
 
 import (
@@ -5,6 +6,7 @@ import (
 	"net/http"
 )
 
+// LogMiddleware logs information about the request
 func LogMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(
 		func(w http.ResponseWriter, r *http.Request) {

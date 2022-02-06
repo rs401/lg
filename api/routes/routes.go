@@ -1,3 +1,4 @@
+// Package routes provides utility to setup routes
 package routes
 
 import (
@@ -8,6 +9,7 @@ import (
 	"github.com/rs401/lg/api/handlers"
 )
 
+// SetupRoutes takes a *mux.Router and a AuthHandlers to configure *mux.Routes
 func SetupRoutes(r *mux.Router, hndlrs handlers.AuthHandlers) {
 	r.HandleFunc("/api/", func(rw http.ResponseWriter, r *http.Request) {
 		rw.WriteHeader(http.StatusOK)

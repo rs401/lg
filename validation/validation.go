@@ -1,3 +1,4 @@
+// Package validation provides methods for validating various inputs
 package validation
 
 import (
@@ -24,6 +25,7 @@ var (
 	MinPwLen int = 8
 )
 
+// IsValidSignUp takes a *SignUpRequest and verifies if the request is valid
 func IsValidSignUp(user *models.SignUpRequest) error {
 	if IsEmptyString(user.Name) {
 		return ErrEmptyName
@@ -44,15 +46,18 @@ func IsValidSignUp(user *models.SignUpRequest) error {
 	return nil
 }
 
+// IsEmptyString verifies if a string is empty
 func IsEmptyString(in string) bool {
 	return strings.TrimSpace(in) == ""
 }
 
+// IsValidEmail verifies if an email is valid
 func IsValidEmail(email string) bool {
 	_, err := mail.ParseAddress(email)
 	return err == nil
 }
 
+// IsValidPassword verifies if a password is valid
 func IsValidPassword(s string) bool {
 	var (
 		isMin   bool
@@ -111,6 +116,7 @@ func IsValidPassword(s string) bool {
 	return true
 }
 
+// NormalizeEmail normalizes email string
 func NormalizeEmail(email string) string {
 	return strings.TrimSpace(strings.ToLower(email))
 }

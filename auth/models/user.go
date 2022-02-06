@@ -1,3 +1,4 @@
+// Package models provides data structures
 package models
 
 import (

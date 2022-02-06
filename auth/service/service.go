@@ -1,3 +1,4 @@
+// Package service provides RPC methods to call repository actions
 package service
 
 import (
@@ -9,6 +10,7 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
+// AuthSvc interface defines the RPC methods to call repository actions
 type AuthSvc interface {
 	SignUp(*models.SignUpRequest, *models.User) error
 	SignIn(*models.SignInRequest, *models.User) error
@@ -18,15 +20,17 @@ type AuthSvc interface {
 	DeleteUser(*models.GetUserRequest, *models.GetUserRequest) error
 }
 
-type AuthService struct {
+type authService struct {
 	usersRepository repository.UsersRepository
 }
 
+// NewAuthService takes a users repository and returns an AuthSvc
 func NewAuthService(usersRepository repository.UsersRepository) AuthSvc {
-	return &AuthService{usersRepository: usersRepository}
+	return &authService{usersRepository: usersRepository}
 }
 
-func (as *AuthService) SignUp(req *models.SignUpRequest, res *models.User) error {
+// SignUp RPC method takes pointers to a SignUpRequest and a User
+func (as *authService) SignUp(req *models.SignUpRequest, res *models.User) error {
 	err := validation.IsValidSignUp(req)
 	if err != nil {
 		return err
@@ -69,7 +73,8 @@ func (as *AuthService) SignUp(req *models.SignUpRequest, res *models.User) error
 
 }
 
-func (as *AuthService) SignIn(req *models.SignInRequest, res *models.User) error {
+// SignIn RPC method takes a SignInRequest and a User
+func (as *authService) SignIn(req *models.SignInRequest, res *models.User) error {
 	user, err := as.usersRepository.GetByEmail(req.Email)
 	if err != nil {
 		return err
@@ -84,7 +89,8 @@ func (as *AuthService) SignIn(req *models.SignInRequest, res *models.User) error
 	return nil
 }
 
-func (as *AuthService) GetUser(req *models.GetUserRequest, res *models.User) error {
+// GetUser RPC method takes a GetUserRequest and a User
+func (as *authService) GetUser(req *models.GetUserRequest, res *models.User) error {
 	user, err := as.usersRepository.GetById(req.Id)
 	if err != nil {
 		return err
@@ -96,7 +102,9 @@ func (as *AuthService) GetUser(req *models.GetUserRequest, res *models.User) err
 	return nil
 }
 
-func (as *AuthService) ListUsers(trash string, res *models.GetUsersResponse) error {
+// ListUsers RPC method takes a trash string because RPC methods need two
+// parameters, an arbitrary request (trash) and a pointer to a response.
+func (as *authService) ListUsers(trash string, res *models.GetUsersResponse) error {
 	users, err := as.usersRepository.GetAll()
 	if err != nil {
 		return err
@@ -107,7 +115,8 @@ func (as *AuthService) ListUsers(trash string, res *models.GetUsersResponse) err
 	return nil
 }
 
-func (as *AuthService) UpdateUser(req *models.User, res *models.User) error {
+// UpdateUser RPC method takes two pointers to User
+func (as *authService) UpdateUser(req *models.User, res *models.User) error {
 	// Verify user exists
 	user, err := as.usersRepository.GetById(uint(req.ID))
 	if err != nil {
@@ -142,7 +151,8 @@ func (as *AuthService) UpdateUser(req *models.User, res *models.User) error {
 
 }
 
-func (as *AuthService) DeleteUser(req, res *models.GetUserRequest) error {
+// DeleteUser RPC method takes two pointers to GetUserRequest
+func (as *authService) DeleteUser(req, res *models.GetUserRequest) error {
 	err := as.usersRepository.Delete(uint(req.Id))
 	if err != nil {
 		return err
