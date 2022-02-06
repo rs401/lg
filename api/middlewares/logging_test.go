@@ -12,12 +12,19 @@ import (
 	"testing"
 )
 
+func skipCI(t *testing.T) {
+	if os.Getenv("CI") != "" {
+		t.Skip("Skipping testing in CI environment")
+	}
+}
+
 func GetTestHandler() http.HandlerFunc {
 	fn := func(rw http.ResponseWriter, req *http.Request) {}
 	return http.HandlerFunc(fn)
 }
 
 func TestLogMiddleware(t *testing.T) {
+	skipCI(t)
 	buf := &bytes.Buffer{}
 
 	// Redirect STDOUT to a buffer
