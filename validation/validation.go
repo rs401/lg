@@ -3,7 +3,6 @@ package validation
 
 import (
 	"errors"
-	"fmt"
 	"net/mail"
 	"strings"
 	"unicode"
@@ -27,10 +26,10 @@ var (
 	// ErrNotFound
 	ErrNotFound = errors.New("user not found")
 	// ErrInvalidPassword
-	ErrInvalidPassword error
+	ErrInvalidPassword = errors.New("invalid password, 8-50 characters, one upper, lower, number and special character")
 
-	MaxPwLen int = 50
-	MinPwLen int = 8
+	maxPwLen int = 50
+	minPwLen int = 8
 )
 
 // IsValidSignUp takes a *SignUpRequest and verifies if the request is valid
@@ -67,24 +66,20 @@ func IsValidEmail(email string) bool {
 
 // IsValidPassword verifies if a password is valid
 func IsValidPassword(s string) bool {
-	var (
-		isMin   bool
-		special bool
-		number  bool
-		upper   bool
-		lower   bool
-		errStr  string
-	)
+
+	special := false
+	number := false
+	upper := false
+	lower := false
 
 	// Check length
-	if len(s) < MinPwLen || len(s) > MaxPwLen {
-		isMin = false
-		errStr += fmt.Sprintf("password length must be between %d and %d, ", MinPwLen, MaxPwLen)
+	if len(s) < minPwLen || len(s) > maxPwLen {
+		return false
 	}
 
 	// Check other requirements
 	for _, c := range s {
-		if special && number && upper && lower && isMin {
+		if special && number && upper && lower {
 			break
 		}
 
@@ -100,24 +95,10 @@ func IsValidPassword(s string) bool {
 		}
 	}
 
-	// Append error messages
-	if !special {
-		errStr += "should contain at least a single special character, "
-	}
-	if !number {
-		errStr += "should contain at least a single digit, "
-	}
-	if !lower {
-		errStr += "should contain at least a single lowercase letter, "
-	}
-	if !upper {
-		errStr += "should contain at least single uppercase letter, "
-	}
-
-	// If there are any errors
-	if len(errStr) > 0 {
-		ErrInvalidPassword = errors.New(errStr)
-		return false
+	for _, v := range []bool{special, number, upper, lower} {
+		if !v {
+			return false
+		}
 	}
 
 	// No errors
