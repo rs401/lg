@@ -20,11 +20,14 @@ func GetTestHandler() http.HandlerFunc {
 func TestLogMiddleware(t *testing.T) {
 	buf := &bytes.Buffer{}
 
+	// Redirect STDOUT to a buffer
+	stdout := os.Stderr
 	r, w, err := os.Pipe()
 	if err != nil {
 		t.Errorf("Failed to redirect STDOUT")
 	}
-
+	os.Stderr = w
+	// Try either using stderr ^ or just setoutput bellow to the buffer
 	log.SetOutput(w)
 	go func() {
 		scanner := bufio.NewScanner(r)
@@ -42,7 +45,8 @@ func TestLogMiddleware(t *testing.T) {
 
 	// Reset output
 	w.Close()
-	log.SetOutput(os.Stdout)
+	os.Stderr = stdout
+	log.SetOutput(os.Stderr)
 
 	// Test output
 	t.Log("LogMiddleware output: ", buf)
