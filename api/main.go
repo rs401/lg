@@ -17,9 +17,9 @@ import (
 )
 
 var (
-	AuthSvcHost string
-	AuthSvcPort int
-	APIPort     int
+	authSvcHost string
+	authSvcPort int
+	apiPort     int
 )
 
 func init() {
@@ -27,19 +27,19 @@ func init() {
 	if err != nil {
 		log.Printf("Error loading .env file (production?): %v\n", err)
 	}
-	AuthSvcHost = os.Getenv("AUTHSVC_HOST")
-	AuthSvcPort, err = strconv.Atoi(os.Getenv("AUTHSVC_PORT"))
+	authSvcHost = os.Getenv("AUTHSVC_HOST")
+	authSvcPort, err = strconv.Atoi(os.Getenv("AUTHSVC_PORT"))
 	if err != nil {
 		log.Fatalf("Error converting AUTHSVC_PORT to int")
 	}
-	APIPort, err = strconv.Atoi(os.Getenv("API_PORT"))
+	apiPort, err = strconv.Atoi(os.Getenv("API_PORT"))
 	if err != nil {
 		log.Fatalf("Error converting API_PORT to int")
 	}
 }
 func main() {
 	// Client dial server
-	client, err := rpc.DialHTTP("tcp", fmt.Sprintf("%s:%d", AuthSvcHost, AuthSvcPort))
+	client, err := rpc.DialHTTP("tcp", fmt.Sprintf("%s:%d", authSvcHost, authSvcPort))
 	if err != nil {
 		log.Fatal("dialing:", err)
 	}
@@ -55,8 +55,8 @@ func main() {
 	// Setup middlewares
 	middlewares.SetupMiddleWares(router)
 	// Listen
-	log.Printf("Listening on port :%d\n", APIPort)
-	err = http.ListenAndServe(fmt.Sprintf(":%d", APIPort), router)
+	log.Printf("Listening on port :%d\n", apiPort)
+	err = http.ListenAndServe(fmt.Sprintf(":%d", apiPort), router)
 	if err != nil {
 		log.Fatalf("Error: %v\n", err)
 	}
