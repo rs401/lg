@@ -117,7 +117,13 @@ func (ah *authHandlers) SignIn(w http.ResponseWriter, r *http.Request) {
 
 // UpdateUser handles calling the Client.UpdateUser method
 func (ah *authHandlers) UpdateUser(w http.ResponseWriter, r *http.Request) {
-	// TODO: Verify authenticated user is the user being updated
+	userId := tokenutils.ExtractUserId(r)
+	if userId == 0 {
+		log.Printf("UserId could not be extracted from token")
+		w.WriteHeader(http.StatusUnauthorized)
+		json.NewEncoder(w).Encode(map[string]string{"error": "unauthorized token error"})
+		return
+	}
 	vars := mux.Vars(r)
 	var user = new(models.User)
 	var result = new(models.User)
@@ -125,6 +131,12 @@ func (ah *authHandlers) UpdateUser(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		json.NewEncoder(w).Encode(map[string]string{"error": "bad path"})
+		return
+	}
+	if userId != uint(id) {
+		log.Printf("UserId did not match")
+		w.WriteHeader(http.StatusUnauthorized)
+		json.NewEncoder(w).Encode(map[string]string{"error": "unauthorized id error"})
 		return
 	}
 	err = json.NewDecoder(r.Body).Decode(&user)
@@ -190,6 +202,13 @@ func (ah *authHandlers) GetUsers(w http.ResponseWriter, r *http.Request) {
 // DeleteUser handles calling the Client.DeleteUser method
 func (ah *authHandlers) DeleteUser(w http.ResponseWriter, r *http.Request) {
 	// TODO: Verify authenticated user is the user being deleted
+	userId := tokenutils.ExtractUserId(r)
+	if userId == 0 {
+		log.Printf("UserId could not be extracted from token")
+		w.WriteHeader(http.StatusUnauthorized)
+		json.NewEncoder(w).Encode(map[string]string{"error": "unauthorized token error"})
+		return
+	}
 	vars := mux.Vars(r)
 	var req, res models.GetUserRequest
 	id, err := strconv.Atoi(vars["id"])
@@ -198,6 +217,13 @@ func (ah *authHandlers) DeleteUser(w http.ResponseWriter, r *http.Request) {
 		json.NewEncoder(w).Encode(map[string]string{"error": "bad path"})
 		return
 	}
+	if userId != uint(id) {
+		log.Printf("UserId did not match")
+		w.WriteHeader(http.StatusUnauthorized)
+		json.NewEncoder(w).Encode(map[string]string{"error": "unauthorized id error"})
+		return
+	}
+
 	req.Id = uint(id)
 	err = ah.authSvcClient.DeleteUser(&req, &res)
 	if err != nil {

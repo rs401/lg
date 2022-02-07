@@ -128,3 +128,16 @@ func StillValid(token *jwt.Token) bool {
 	// Not ok
 	return false
 }
+
+func ExtractUserId(r *http.Request) uint {
+	token, err := VerifyToken(r)
+	if err != nil {
+		log.Printf("Error verifying token while extracting user id")
+		return 0
+	}
+	if claims, ok := token.Claims.(*Claims); ok && token.Valid {
+		return claims.UserId
+	}
+	// Claims not ok
+	return 0
+}
