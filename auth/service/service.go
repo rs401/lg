@@ -20,17 +20,17 @@ type AuthSvc interface {
 	DeleteUser(*models.GetUserRequest, *models.GetUserRequest) error
 }
 
-type authService struct {
+type AuthService struct {
 	usersRepository repository.UsersRepository
 }
 
 // NewAuthService takes a users repository and returns an AuthSvc
 func NewAuthService(usersRepository repository.UsersRepository) AuthSvc {
-	return &authService{usersRepository: usersRepository}
+	return &AuthService{usersRepository: usersRepository}
 }
 
 // SignUp RPC method takes pointers to a SignUpRequest and a User
-func (as *authService) SignUp(req *models.SignUpRequest, res *models.User) error {
+func (as *AuthService) SignUp(req *models.SignUpRequest, res *models.User) error {
 	err := validation.IsValidSignUp(req)
 	if err != nil {
 		return err
@@ -74,7 +74,7 @@ func (as *authService) SignUp(req *models.SignUpRequest, res *models.User) error
 }
 
 // SignIn RPC method takes a SignInRequest and a User
-func (as *authService) SignIn(req *models.SignInRequest, res *models.User) error {
+func (as *AuthService) SignIn(req *models.SignInRequest, res *models.User) error {
 	user, err := as.usersRepository.GetByEmail(req.Email)
 	if err != nil {
 		return err
@@ -90,7 +90,7 @@ func (as *authService) SignIn(req *models.SignInRequest, res *models.User) error
 }
 
 // GetUser RPC method takes a GetUserRequest and a User
-func (as *authService) GetUser(req *models.GetUserRequest, res *models.User) error {
+func (as *AuthService) GetUser(req *models.GetUserRequest, res *models.User) error {
 	user, err := as.usersRepository.GetById(req.Id)
 	if err != nil {
 		return err
@@ -104,7 +104,7 @@ func (as *authService) GetUser(req *models.GetUserRequest, res *models.User) err
 
 // ListUsers RPC method takes a trash string because RPC methods need two
 // parameters, an arbitrary request (trash) and a pointer to a response.
-func (as *authService) ListUsers(trash string, res *models.GetUsersResponse) error {
+func (as *AuthService) ListUsers(trash string, res *models.GetUsersResponse) error {
 	users, err := as.usersRepository.GetAll()
 	if err != nil {
 		return err
@@ -116,7 +116,7 @@ func (as *authService) ListUsers(trash string, res *models.GetUsersResponse) err
 }
 
 // UpdateUser RPC method takes two pointers to User
-func (as *authService) UpdateUser(req *models.User, res *models.User) error {
+func (as *AuthService) UpdateUser(req *models.User, res *models.User) error {
 	// Verify user exists
 	user, err := as.usersRepository.GetById(uint(req.ID))
 	if err != nil {
@@ -152,7 +152,7 @@ func (as *authService) UpdateUser(req *models.User, res *models.User) error {
 }
 
 // DeleteUser RPC method takes two pointers to GetUserRequest
-func (as *authService) DeleteUser(req, res *models.GetUserRequest) error {
+func (as *AuthService) DeleteUser(req, res *models.GetUserRequest) error {
 	err := as.usersRepository.Delete(uint(req.Id))
 	if err != nil {
 		return err

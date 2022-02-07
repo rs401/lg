@@ -1,3 +1,4 @@
+// Package api provides HTTP endpoints
 package main
 
 import (

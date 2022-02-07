@@ -1,3 +1,4 @@
+// Package auth provides RPC methods to be called
 package main
 
 import (
