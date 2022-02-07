@@ -8,6 +8,7 @@ import (
 	"os"
 	"reflect"
 	"testing"
+	"time"
 
 	"github.com/golang-jwt/jwt"
 	"github.com/joho/godotenv"
@@ -123,7 +124,7 @@ func TestVerifyToken(t *testing.T) {
 	assert.NoError(t, err)
 
 	tokenString := tokens.AccessToken
-	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
+	token, err := jwt.ParseWithClaims(tokenString, &Claims{}, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
 		}
@@ -166,7 +167,7 @@ func TestVerifyRefreshToken(t *testing.T) {
 	assert.NoError(t, err)
 
 	tokenString := tokens.RefreshToken
-	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
+	token, err := jwt.ParseWithClaims(tokenString, &Claims{}, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
 		}
@@ -174,7 +175,12 @@ func TestVerifyRefreshToken(t *testing.T) {
 	})
 	assert.NoError(t, err)
 	req := httptest.NewRequest(http.MethodGet, "/api/", nil)
-	req.Header.Set("Authorization", fmt.Sprintf("Bearer %v", tokenString))
+	// req.Header.Set("Authorization", fmt.Sprintf("Bearer %v", tokenString))
+	req.AddCookie(&http.Cookie{
+		Name:    "refresh_token",
+		Value:   tokenString,
+		Expires: time.Now().Add(time.Hour * 24),
+	})
 	tests := []struct {
 		name    string
 		args    args

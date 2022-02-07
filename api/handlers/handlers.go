@@ -117,6 +117,7 @@ func (ah *authHandlers) SignIn(w http.ResponseWriter, r *http.Request) {
 
 // UpdateUser handles calling the Client.UpdateUser method
 func (ah *authHandlers) UpdateUser(w http.ResponseWriter, r *http.Request) {
+	// TODO: Verify authenticated user is the user being updated
 	vars := mux.Vars(r)
 	var user = new(models.User)
 	var result = new(models.User)
@@ -188,6 +189,7 @@ func (ah *authHandlers) GetUsers(w http.ResponseWriter, r *http.Request) {
 
 // DeleteUser handles calling the Client.DeleteUser method
 func (ah *authHandlers) DeleteUser(w http.ResponseWriter, r *http.Request) {
+	// TODO: Verify authenticated user is the user being deleted
 	vars := mux.Vars(r)
 	var req, res models.GetUserRequest
 	id, err := strconv.Atoi(vars["id"])
