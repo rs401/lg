@@ -168,5 +168,6 @@ Distributed under the MIT License. See `LICENSE.txt` for more information.
 [stars-url]: https://github.com/rs401/lg/stargazers
 [issues-url]: https://github.com/rs401/lg/issues
 [license-url]: https://github.com/rs401/lg/blob/master/LICENSE.txt
+[license-shield]: https://img.shields.io/github/license/rs4011/lg.svg?style=for-the-badge
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
 [linkedin-url]: https://linkedin.com/in/richard-stadnick-3b4ab53b
