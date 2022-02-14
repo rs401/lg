@@ -16,7 +16,7 @@
   <p align="center">
     Go Microservices API with standard net/rpc, Docker containers and Kubernetes.
     <br />
-    <a href="https://github.com/rs401/lg/docs"><strong>Explore the docs »</strong></a>
+    <a href="https://github.com/rs401/lg/tree/main/docs"><strong>Explore the docs »</strong></a>
     <br />
     <br />
     ·
