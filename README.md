@@ -1,13 +1,7 @@
 <div id="top"></div>
 
-<!-- PROJECT SHIELDS -->
-<!--
-*** I'm using markdown "reference style" links for readability.
-*** Reference links are enclosed in brackets [ ] instead of parentheses ( ).
-*** See the bottom of this document for the declaration of the reference variables
-*** for contributors-url, forks-url, etc. This is an optional, concise syntax you may use.
-*** https://www.markdownguide.org/basic-syntax/#reference-style-links
--->
+<div align="center">
+
 [![Go Report Card](https://goreportcard.com/badge/github.com/rs401/lg)](https://goreportcard.com/report/github.com/rs401/lg)
 [![MIT License][license-shield]][license-url]
 [![LinkedIn][linkedin-shield]][linkedin-url]
@@ -16,7 +10,6 @@
 
 <!-- PROJECT LOGO -->
 <br />
-<div align="center">
 
 <h3 align="center">Go net/rpc Authentication system</h3>
 
